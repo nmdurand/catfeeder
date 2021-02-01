@@ -1,0 +1,32 @@
+{
+  "name": "catfeeder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "open \"http://localhost:8080\" && webpack serve",
+    "build": "rm -rf dist/* && webpack",
+    "upload-arduino": "arduino-cli compile -b arduino:megaavr:uno2018 arduinoSketch/ -u -v",
+    "arduino-serve": "arduino-cli compile -b arduino:megaavr:uno2018 arduinoSketch/ -u -v && screen /dev/cu.usbmodem1D1702 9600"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "coffee-loader": "^2.0.0",
+    "coffeescript": "^2.5.1",
+    "css-loader": "^5.0.1",
+    "handlebars-loader": "^1.7.1",
+    "html-webpack-plugin": "^4.5.1",
+    "jquery": "^3.5.1",
+    "sass": "^1.32.5",
+    "sass-loader": "^10.1.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.19.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.4.0",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
