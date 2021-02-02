@@ -1,36 +1,23 @@
 /*
-  Based on SimpleWebServerWiFi example
+  Based on the SimpleWebServerWiFi example
 
-  WiFi Web Server LED Blink
-
- A simple web server that lets you blink an LED via the web.
- This sketch will print the IP address of your WiFi module (once connected)
- to the Serial monitor. From there, you can open that address in a web browser
- to turn on and off the LED on pin 9.
-
- If the IP address of your board is yourAddress:
- http://yourAddress/H turns the LED on
- http://yourAddress/L turns it off
+  Compile, upload the sketch and screen Serial with the command `npm run arduino-serve`
 
  This example is written for a network using WPA encryption. For
  WEP or WPA, change the Wifi.begin() call accordingly.
 
  Circuit:
  * Board with NINA module (Arduino MKR WiFi 1010, MKR VIDOR 4000 and UNO WiFi Rev.2)
- * LED attached to pin 9
-
- created 25 Nov 2012
- by Tom Igoe
  */
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <ArduinoJson.h>
 
 #include "arduino_secrets.h"
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = SECRET_SSID;        // your network SSID (name)
-char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-// char data[] = "This is the default data";
+///////please enter your sensitive data in the file arduino_secrets.h
+char ssid[] = SECRET_SSID;        // network SSID
+char pass[] = SECRET_PASS;    // network password (use for WPA, or use as key for WEP)
+
 int keyIndex = 0;                 // your network key Index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
@@ -86,9 +73,6 @@ void printWifiStatus() {
   Serial.print("signal strength (RSSI):");
   Serial.print(rssi);
   Serial.println(" dBm");
-  // // print where to go in a browser:
-  // Serial.print("To see this page in action, open a browser to http://");
-  // Serial.println(ip);
 }
 
 void loop() {
@@ -109,7 +93,7 @@ void loop() {
           if (currentLine.length() == 0) {
             // break out of the while loop:
             break;
-          } else {    // if you got a newline, then clear currentLine:
+        } else {    // if you got a newline, handle current line then clear it:
             handleRequestLine(currentLine,client);
             currentLine = "";
           }
