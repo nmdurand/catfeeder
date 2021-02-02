@@ -22,7 +22,7 @@ int keyIndex = 0;                 // your network key Index number (needed only 
 
 int status = WL_IDLE_STATUS;
 WiFiServer server(80);
-StaticJsonDocument<200> doc;
+StaticJsonDocument<200> state;
 
 void setup() {
   Serial.begin(9600);      // initialize serial communication
@@ -51,8 +51,8 @@ void setup() {
     delay(10000);
   }
 
-  // Initialize data
-  doc["msg"] = 42;
+  // Initialize state
+  state["msg"] = 42;
 
   server.begin();                           // start the web server on port 80
   printWifiStatus();                        // you're connected now, so print out the status
@@ -109,18 +109,18 @@ void loop() {
 }
 
 void handleRequestLine(String currentLine, WiFiClient client) {
-    if (currentLine.startsWith("GET /data/get")) {
-      Serial.println("New client requesting data.");
+    if (currentLine.startsWith("GET /state/get")) {
+      Serial.println("New client requesting state.");
       client.println("HTTP/1.1 200 OK");
       client.println("Content-type:text/html");
       client.println("Access-Control-Allow-Origin: *");
       client.println();
-      serializeJsonPretty(doc, Serial);                // GET /data/get asks for data value
-      serializeJsonPretty(doc, client);                // GET /data/get asks for data value
+      serializeJsonPretty(state, Serial);                // GET /state/get asks for state value
+      serializeJsonPretty(state, client);                // GET /state/get asks for state value
       client.println();
     }
-    if (currentLine.startsWith("GET /data/set")) {
-      Serial.println("New client requesting data setting.");
+    if (currentLine.startsWith("GET /state/set")) {
+      Serial.println("New client requesting state setting.");
       client.println("HTTP/1.1 200 OK");
       client.println("Content-type:text/html");
       client.println("Access-Control-Allow-Origin: *");
@@ -155,7 +155,7 @@ void parseQueryString(String qs) {
                     val = qs;
                     qs = "";
                 }
-                doc[key] = val;
+                state[key] = val;
                 Serial.print("Got value: ");
                 Serial.print(key);
                 Serial.print(" : ");
