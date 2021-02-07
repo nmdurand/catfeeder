@@ -22,6 +22,8 @@ int status = WL_IDLE_STATUS;
 WiFiServer server(80);
 
 StaticJsonDocument<200> state;
+// Initialize state
+state["msg"] = 42;
 
 AlarmId alarm_id;
 
@@ -62,7 +64,7 @@ void connectWiFi() {
   // attempt to connect to Wifi network:
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to Network named: ");
-    Serial.println(ssid);                   // print the network name (SSID);
+    Serial.println(ssid); // print the network name (SSID);
 
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
@@ -70,11 +72,8 @@ void connectWiFi() {
     Alarm.delay(10000);
   }
 
-  // Initialize state
-  state["msg"] = 42;
-
-  server.begin();                           // start the web server on port 80
-  printWifiStatus();                        // you're connected now, so print out the status
+  server.begin(); // start the web server on port 80
+  printWifiStatus(); // you're connected now, so print out the status
 }
 
 void printWifiStatus() {
