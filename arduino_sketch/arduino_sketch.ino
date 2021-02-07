@@ -10,6 +10,8 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <ArduinoJson.h>
+#include <TimeLib.h>
+#include <TimeAlarms.h>
 
 #include "arduino_secrets.h"
 
@@ -21,17 +23,25 @@ WiFiServer server(80);
 
 StaticJsonDocument<200> state;
 
+AlarmId alarm_id;
+
 ////////////////////////////////////////////////
 
 void setup() {
   Serial.begin(9600);      // initialize serial communication
+  while (!Serial); // wait for Arduino Serial Monitor
   pinMode(LED_BUILTIN, OUTPUT); // set builtin led pin mode
+  digitalWrite(LED_BUILTIN, HIGH);
+
+  setTime();
+  setAlarm();
 
   connectWiFi();
 }
 
 void loop() {
   handleServerClient();
+  Alarm.delay(0); // Needed to trigger the alarms
 }
 
 //////////////////////////////////////////////// WiFi setup
@@ -57,7 +67,7 @@ void connectWiFi() {
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
     // wait 10 seconds for connection:
-    delay(10000);
+    Alarm.delay(10000);
   }
 
   // Initialize state
@@ -185,4 +195,40 @@ void parseQueryString(String qs) {
     } else {
         Serial.println("No parameters in querystring.");
     }
+}
+
+//////////////////////////////////////////////// Time and Alarms
+
+void setTime() {
+  setTime(8,29,0,1,1,11); // set time to Saturday 8:29:00am Jan 1 2011
+}
+
+void setAlarm() {
+  // alarm_id = Alarm.alarmRepeat(8,30,0, MorningAlarm);  // 8:30am every day
+  alarm_id = Alarm.timerRepeat(1, blinkBuiltinLed); // timer for every second
+}
+
+void blinkBuiltinLed() {
+  digitalClockDisplay();
+  Serial.println("New call to scheduled function.");
+  if(digitalRead(LED_BUILTIN) == HIGH) {
+    digitalWrite(LED_BUILTIN, LOW);
+  } else {
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+}
+
+void digitalClockDisplay() {
+  // digital clock display of the time
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.println();
+}
+
+void printDigits(int digits) {
+  Serial.print(":");
+  if (digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
 }
