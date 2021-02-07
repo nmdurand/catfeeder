@@ -4,17 +4,18 @@ import $ from 'jquery'
 $('#getData').on 'click', ->
 	try
 		response = await axios.get 'http://192.168.1.36/state/get'
-		console.log 'Data response:', response.state
-		$('#textField').val JSON.stringify(response.state)
+		console.log 'Got response:', response.data
+		$('#textField').val response.data.msg
 	catch err
 		console.log err
 
 $('#setData').on 'click', ->
 	try
-		data = $('#textField').val()
+		newState = $('#textField').val()
 		response = await axios.get 'http://192.168.1.36/state/set',
 			params:
-				state: state
-		console.log 'Response trying to set state:', response
+				msg: newState
+		console.log 'Got response:', response.data
+		$('#textField').val ""
 	catch err
 		console.log err

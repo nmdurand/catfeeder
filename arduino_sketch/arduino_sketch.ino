@@ -1,33 +1,42 @@
 /*
-  Based on the SimpleWebServerWiFi example
+ Based on the SimpleWebServerWiFi example
 
-  Compile, upload the sketch and screen Serial with the command `npm run arduino-serve`
-
- This example is written for a network using WPA encryption. For
- WEP or WPA, change the Wifi.begin() call accordingly.
+ Compile, upload the sketch and screen Serial with the command `npm run arduino-serve`
 
  Circuit:
  * Board with NINA module (Arduino MKR WiFi 1010, MKR VIDOR 4000 and UNO WiFi Rev.2)
  */
+
 #include <SPI.h>
 #include <WiFiNINA.h>
 #include <ArduinoJson.h>
 
 #include "arduino_secrets.h"
-///////please enter your sensitive data in the file arduino_secrets.h
-char ssid[] = SECRET_SSID;        // network SSID
-char pass[] = SECRET_PASS;    // network password (use for WPA, or use as key for WEP)
 
-int keyIndex = 0;                 // your network key Index number (needed only for WEP)
+char ssid[] = SECRET_SSID;    // network SSID
+char pass[] = SECRET_PASS;    // network password (WPA)
 
 int status = WL_IDLE_STATUS;
 WiFiServer server(80);
+
 StaticJsonDocument<200> state;
+
+////////////////////////////////////////////////
 
 void setup() {
   Serial.begin(9600);      // initialize serial communication
-  pinMode(9, OUTPUT);      // set the LED pin mode
+  pinMode(LED_BUILTIN, OUTPUT); // set builtin led pin mode
 
+  connectWiFi();
+}
+
+void loop() {
+  handleServerClient();
+}
+
+//////////////////////////////////////////////// WiFi setup
+
+void connectWiFi() {
   // check for the WiFi module:
   if (WiFi.status() == WL_NO_MODULE) {
     Serial.println("Communication with WiFi module failed!");
@@ -75,41 +84,44 @@ void printWifiStatus() {
   Serial.println(" dBm");
 }
 
-void loop() {
-  WiFiClient client = server.available();   // listen for incoming clients
+//////////////////////////////////////////////// Server logic
 
-  if (client) {                             // if you get a client,
-    Serial.println("new client");           // print a message out the serial port
+void handleServerClient() {
+    WiFiClient client = server.available();   // listen for incoming clients
 
-    String currentLine = "";                // make a String to hold incoming data from the client
-    while (client.connected()) {            // loop while the client's connected
-      if (client.available()) {             // if there's bytes to read from the client,
-        char c = client.read();             // read a byte, then
-        Serial.write(c);                    // print it out the serial monitor
-        if (c == '\n') {                    // if the byte is a newline character
+    if (client) {                             // if you get a client,
+      Serial.println("new client");           // print a message out the serial port
 
-          // if the current line is blank, you got two newline characters in a row.
-          // that's the end of the client HTTP request, so exit the loop
-          if (currentLine.length() == 0) {
-            // break out of the while loop:
-            break;
-        } else {    // if you got a newline, handle current line then clear it:
-            handleRequestLine(currentLine,client);
-            currentLine = "";
+      String currentLine = "";                // make a String to hold incoming data from the client
+      while (client.connected()) {            // loop while the client's connected
+        if (client.available()) {             // if there's bytes to read from the client,
+          char c = client.read();             // read a byte, then
+          Serial.write(c);                    // print it out the serial monitor
+          if (c == '\n') {                    // if the byte is a newline character
+
+            // if the current line is blank, you got two newline characters in a row.
+            // that's the end of the client HTTP request, so exit the loop
+            if (currentLine.length() == 0) {
+              // break out of the while loop:
+              break;
+          } else {    // if you got a newline, handle current line then clear it:
+              handleRequestLine(currentLine,client);
+              currentLine = "";
+            }
+          } else if (c != '\r') {  // if you got anything else but a carriage return character,
+            currentLine += c;      // add it to the end of the currentLine
           }
-        } else if (c != '\r') {  // if you got anything else but a carriage return character,
-          currentLine += c;      // add it to the end of the currentLine
         }
       }
+      // close the connection:
+      client.stop();
+      Serial.println("client disonnected");
     }
-    // close the connection:
-    client.stop();
-    Serial.println("client disonnected");
-  }
 }
 
 void handleRequestLine(String currentLine, WiFiClient client) {
     if (currentLine.startsWith("GET /state/get")) {
+      // Handle state/get request
       Serial.println("New client requesting state.");
       client.println("HTTP/1.1 200 OK");
       client.println("Content-type:text/html");
@@ -120,6 +132,7 @@ void handleRequestLine(String currentLine, WiFiClient client) {
       client.println();
     }
     if (currentLine.startsWith("GET /state/set")) {
+        // Handle state/set request
       Serial.println("New client requesting state setting.");
       client.println("HTTP/1.1 200 OK");
       client.println("Content-type:text/html");
@@ -127,6 +140,9 @@ void handleRequestLine(String currentLine, WiFiClient client) {
       client.println();
 
       parseQueryString(currentLine);
+      serializeJsonPretty(state, Serial);                // GET /state/get asks for state value
+      serializeJsonPretty(state, client);                // GET /state/get asks for state value
+      client.println();
     }
 }
 
@@ -159,7 +175,9 @@ void parseQueryString(String qs) {
                 Serial.print("Got value: ");
                 Serial.print(key);
                 Serial.print(" : ");
-                Serial.println(val);
+                Serial.print("#");
+                Serial.print(val);
+                Serial.println("#");
             } else {
                 break;
             }

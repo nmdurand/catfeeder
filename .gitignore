@@ -1,4 +1,4 @@
 .DS_Store
 node_modules/
 dist/
-arduinoSketch/arduino_secrets.h
+arduino_sketch/arduino_secrets.h
