@@ -1,3 +1,5 @@
 import '../styles/main.scss'
 
-import 'app'
+import App from 'app'
+app = new App region: '#container'
+app.start()

@@ -1,21 +1,11 @@
-import axios from 'axios'
-import $ from 'jquery'
+import {Application} from 'backbone.marionette'
+import LayoutView from 'views/layout'
 
-$('#getData').on 'click', ->
-	try
-		response = await axios.get 'http://192.168.1.36/state/get'
-		console.log 'Got response:', response.data
-		$('#textField').val response.data.msg
-	catch err
-		console.log err
 
-$('#setData').on 'click', ->
-	try
-		newState = $('#textField').val()
-		response = await axios.get 'http://192.168.1.36/state/set',
-			params:
-				msg: newState
-		console.log 'Got response:', response.data
-		$('#textField').val ""
-	catch err
-		console.log err
+export default class App extends Application
+	initialize: ->
+		console.debug 'Initializing app'
+
+	onStart: ->
+		console.debug 'Starting App'
+		@showView new LayoutView
