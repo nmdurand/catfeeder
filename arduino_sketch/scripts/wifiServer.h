@@ -1,6 +1,6 @@
 #include <WiFiNINA.h>
 
-#include "../arduino_secrets.h"
+#include "wifi_secrets.h"
 
 char ssid[] = SECRET_SSID;    // network SSID
 char pass[] = SECRET_PASS;    // network password (WPA)
