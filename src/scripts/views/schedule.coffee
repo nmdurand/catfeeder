@@ -14,7 +14,6 @@ class ScheduleItemView extends Marionette.View
 	initialize: ->
 		# console.log 'Initializing Schedule Item View'
 
-
 export default class ScheduleView extends Marionette.CollectionView
 	template: template
 	className: 'schedule'
@@ -22,8 +21,11 @@ export default class ScheduleView extends Marionette.CollectionView
 	childView: ScheduleItemView
 	childViewContainer: '.scheduleContainer'
 
+	ui:
+		'addBtn': '#addBtn'
+
 	events:
-		'click #addBtn': 'addItem'
+		'click @ui.addBtn': 'addItem'
 	childViewEvents:
 		'delete': 'handleDeleteChild'
 
@@ -33,8 +35,16 @@ export default class ScheduleView extends Marionette.CollectionView
 		@collection = new Backbone.Collection
 		@collection.viewComparator = 'time'
 
-	templateContext: ->
-		slotsAvailable: => @collection.length < MAX_SLOTS
+		@collection.on 'add remove', => @updateAddBtnVisibility()
+
+	onRender: ->
+		@updateAddBtnVisibility()
+
+	updateAddBtnVisibility: ->
+		if @collection.length < MAX_SLOTS
+			@ui.addBtn.show()
+		else
+			@ui.addBtn.hide()
 
 	addItem: ->
 		unless @collection.length >=  MAX_SLOTS
