@@ -5,35 +5,37 @@ StaticJsonDocument<200> state;
 //////////////////////////////////////////////// Functions declarations
 
 void initializeState();
-StaticJsonDocument getSchedule();
+String getSchedule();
 void setSchedule();
 
 ////////////////////////////////////////////////
 
 void initializeState() {
-  state["schedule"] = [
-    {
-      "h":7,
-      "m":0,
-      "qty":1
-    },
-    {
-      "h":12,
-      "m":0,
-      "qty":1
-    },
-    {
-      "h":19,
-      "m":0,
-      "qty":1
-    }
-  ];
+  state["schedule"] = "42";
+  // state["schedule"] = [
+  //   {
+  //     "h":7,
+  //     "m":0,
+  //     "qty":1
+  //   },
+  //   {
+  //     "h":12,
+  //     "m":0,
+  //     "qty":1
+  //   },
+  //   {
+  //     "h":19,
+  //     "m":0,
+  //     "qty":1
+  //   }
+  // ];
 }
 
-StaticJsonDocument getSchedule() {
-  return state["schedule"];
+String getSchedule() {
+  // return state["schedule"];
+  return "Schedule placeholder";
 }
 
-void setSchedule(array schedule) {
-  state["schedule"] = schedule;
+void setSchedule() {
+  // state["schedule"] = schedule;
 }
