@@ -8,7 +8,7 @@
     "serve": "open \"http://localhost:8080\" && webpack serve",
     "build": "rm -rf dist/* && webpack",
     "upload-arduino": "arduino-cli compile -b arduino:megaavr:uno2018 arduino_sketch/ -u -v",
-    "arduino-serve": "arduino-cli compile -b arduino:megaavr:uno2018 arduino_sketch/ -u -v && screen /dev/cu.usbmodem1D1702 9600"
+    "arduino-serve": "arduino-cli compile -b arduino:megaavr:uno2018 arduino_sketch/ -u -v && screen ${usb_port:-/dev/cu.usbmodem1D1702} 9600"
   },
   "author": "",
   "license": "ISC",

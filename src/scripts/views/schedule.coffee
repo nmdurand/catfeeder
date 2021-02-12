@@ -2,6 +2,8 @@ import Marionette from 'backbone.marionette'
 import template from 'templates/schedule'
 import itemTemplate from 'templates/schedule/item'
 
+import RequestUtils from 'lib/request'
+
 MAX_SLOTS = 6
 
 class ScheduleItemView extends Marionette.View
@@ -37,8 +39,18 @@ export default class ScheduleView extends Marionette.CollectionView
 
 		@collection.on 'add remove', => @updateAddBtnVisibility()
 
+		@updateScheduleData()
+
 	onRender: ->
 		@updateAddBtnVisibility()
+
+	updateScheduleData: (scheduleDetails)=>
+		unless scheduleDetails?
+			try
+				scheduleDetails = await RequestUtils.getSchedule()
+			catch err
+				console.error 'Error fetching schedule:', err
+		@collection.update scheduleDetails
 
 	updateAddBtnVisibility: ->
 		if @collection.length < MAX_SLOTS

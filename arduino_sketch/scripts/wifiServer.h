@@ -99,28 +99,28 @@ void handleServerClient() {
 }
 
 void handleRequestLine(String currentLine, WiFiClient client) {
-  if (currentLine.startsWith("GET /state/get")) {
-    // Handle state/get request
-    Serial.println("New client requesting state.");
+  if (currentLine.startsWith("GET /schedule/get")) {
+    // Handle schedule/get request
+    Serial.println("New client requesting schedule.");
     client.println("HTTP/1.1 200 OK");
     client.println("Content-type:text/html");
     client.println("Access-Control-Allow-Origin: *");
     client.println();
-    serializeJsonPretty(state, Serial);                // GET /state/get asks for state value
-    serializeJsonPretty(state, client);                // GET /state/get asks for state value
+    serializeJsonPretty(state["schedule"], Serial);
+    serializeJsonPretty(state["schedule"], client);
     client.println();
   }
-  if (currentLine.startsWith("GET /state/set")) {
-      // Handle state/set request
-    Serial.println("New client requesting state setting.");
+  if (currentLine.startsWith("GET /schedule/set")) {
+      // Handle schedule/set request
+    Serial.println("New client requesting schedule setting.");
     client.println("HTTP/1.1 200 OK");
     client.println("Content-type:text/html");
     client.println("Access-Control-Allow-Origin: *");
     client.println();
 
     parseQueryString(currentLine);
-    serializeJsonPretty(state, Serial);                // GET /state/get asks for state value
-    serializeJsonPretty(state, client);                // GET /state/get asks for state value
+    serializeJsonPretty(state["schedule"], Serial);
+    serializeJsonPretty(state["schedule"], client);
     client.println();
   }
 }
