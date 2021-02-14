@@ -106,8 +106,9 @@ void handleRequestLine(String currentLine, WiFiClient client) {
     client.println("Content-type:text/html");
     client.println("Access-Control-Allow-Origin: *");
     client.println();
-    serializeJsonPretty(state["schedule"], Serial);
-    serializeJsonPretty(state["schedule"], client);
+    serializeJson(schedule, Serial);
+    Serial.println();
+    serializeJson(schedule, client);
     client.println();
   }
   if (currentLine.startsWith("GET /schedule/set")) {
@@ -119,8 +120,9 @@ void handleRequestLine(String currentLine, WiFiClient client) {
     client.println();
 
     parseQueryString(currentLine);
-    serializeJsonPretty(state["schedule"], Serial);
-    serializeJsonPretty(state["schedule"], client);
+    serializeJson(schedule, Serial);
+    Serial.println();
+    serializeJson(schedule, client);
     client.println();
   }
 }
@@ -150,7 +152,7 @@ void parseQueryString(String qs) {
           val = qs;
           qs = "";
         }
-        state[key] = val;
+        schedule[key] = val;
         Serial.print("Got value: ");
         Serial.print(key);
         Serial.print(" : ");

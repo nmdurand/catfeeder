@@ -1,10 +1,16 @@
 import Marionette from 'backbone.marionette'
 import template from 'templates/schedule'
 import itemTemplate from 'templates/schedule/item'
+import _ from 'lodash'
 
 import RequestUtils from 'lib/request'
 
 MAX_SLOTS = 6
+
+asDoubleDigit = (t)->
+	if t < 10
+		t = "0" + t
+	t
 
 class ScheduleItemView extends Marionette.View
 	template: itemTemplate
@@ -50,7 +56,11 @@ export default class ScheduleView extends Marionette.CollectionView
 				scheduleDetails = await RequestUtils.getSchedule()
 			catch err
 				console.error 'Error fetching schedule:', err
-		@collection.update scheduleDetails
+
+		_.each scheduleDetails, (item)->
+			item.time = asDoubleDigit(item.h) + ":" + asDoubleDigit(item.m)
+
+		@collection.set scheduleDetails
 
 	updateAddBtnVisibility: ->
 		if @collection.length < MAX_SLOTS
@@ -63,7 +73,7 @@ export default class ScheduleView extends Marionette.CollectionView
 			console.log 'Adding item to schedule'
 			@collection.add new Backbone.Model
 				time: '12:00'
-				qty: 1
+				q: 1
 
 	handleDeleteChild: (cv)->
 		console.log 'Removing child from collection'

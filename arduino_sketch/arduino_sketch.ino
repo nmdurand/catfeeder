@@ -23,7 +23,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT); // set builtin led pin mode
   digitalWrite(LED_BUILTIN, HIGH);
 
-  initializeState();
+  initializeSchedule();
 
   connectWiFi();
 

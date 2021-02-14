@@ -1,7 +1,7 @@
 import axios from 'axios'
 import $ from 'jquery'
 
-SERVER_URL = 'http://192.168.1.36/'
+SERVER_URL = 'http://192.168.1.26/'
 
 export default RequestUtils =
 	getSchedule: ->
