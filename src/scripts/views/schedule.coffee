@@ -95,6 +95,9 @@ export default class ScheduleView extends Marionette.CollectionView
 			console.log 'Adding item to schedule'
 			@collection.add new Backbone.Model
 				time: '12:00'
+				s: 1
+				h: 12
+				m: 0
 				q: 1
 
 	handleDeleteChild: (cv)->
