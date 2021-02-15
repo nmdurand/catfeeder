@@ -3,9 +3,15 @@
 		<input type="time" class="form-control time" value="{{time}}">
 	</div>
 	<div class="col">
-		<input type="number" class="form-control quantity" value="{{q}}">
+		<div class="input-group">
+			<div class="input-group-prepend">
+				<div class="input-group-text">Qty</div>
+			</div>
+			<input type="number" class="form-control quantity" value="{{q}}" min="1">
+		</div>
 	</div>
 </form>
-<div class="col">
-	<button class="btn btn-danger delete"> x </button>
+<div class="col action">
+	<button class="btn btn-danger delete"><i class="fas fa-trash"></i></button>
+	<button class="btn btn-outline-secondary disable"><i class="fas fa-power-off"></i></button>
 </div>

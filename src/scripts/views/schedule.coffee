@@ -6,6 +6,7 @@ import _ from 'lodash'
 import RequestUtils from 'lib/request'
 
 MAX_SLOTS = 6
+DISABLED_CLASS = 'disabledItem'
 
 asDoubleDigit = (t)->
 	if t < 10
@@ -18,6 +19,9 @@ class ScheduleItemView extends Marionette.View
 
 	triggers:
 		'click .delete': 'delete'
+
+	events:
+		'click .disable': 'handleDisable'
 
 	bindings:
 		'.time':
@@ -37,6 +41,20 @@ class ScheduleItemView extends Marionette.View
 
 	onRender: ->
 		@stickit()
+		@updateDisabledState()
+
+	handleDisable: ->
+		if @model.get('s') is 0
+			@model.set 's', 1
+		else
+			@model.set 's', 0
+		@updateDisabledState()
+
+	updateDisabledState: ->
+		if @model.get('s') is 0
+			@$el.addClass DISABLED_CLASS
+		else
+			@$el.removeClass DISABLED_CLASS
 
 export default class ScheduleView extends Marionette.CollectionView
 	template: template

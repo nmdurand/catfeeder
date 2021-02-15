@@ -1,5 +1,9 @@
 @import "~bootstrap/scss/bootstrap";
+@import "~@fortawesome/fontawesome-free/css/all.css";
 
 .scheduleItem {
 	display: flex;
+	&.disabledItem {
+		background-color: lightGrey;
+	}
 }
