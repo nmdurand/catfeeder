@@ -14,7 +14,7 @@ void connectWiFi();
 void printWifiStatus();
 void handleServerClient();
 void handleRequestLine(String currentLine, WiFiClient client);
-void parseQueryString(String qs);
+String parseQueryStringForKey(String qs, String targetKey);
 
 //////////////////////////////////////////////// WiFi setup
 
@@ -119,7 +119,8 @@ void handleRequestLine(String currentLine, WiFiClient client) {
     client.println("Access-Control-Allow-Origin: *");
     client.println();
 
-    parseQueryString(currentLine);
+    String newSchedule = parseQueryStringForKey(currentLine,"schedule");
+    setSchedule(newSchedule);
     serializeJson(schedule, Serial);
     Serial.println();
     serializeJson(schedule, client);
@@ -127,7 +128,7 @@ void handleRequestLine(String currentLine, WiFiClient client) {
   }
 }
 
-void parseQueryString(String qs) {
+String parseQueryStringForKey(String qs, String targetKey) {
   Serial.println("Parsing querystring");
 
   int i;
@@ -157,18 +158,12 @@ void parseQueryString(String qs) {
           qs = "";
         }
 
-        if (key == "schedule") {
-          Serial.println("Received new schedule:");
-          Serial.println(val);
+        if (key == targetKey) {
+          Serial.println("Found target key");
 
-          setSchedule(val);
+          // Found target key in querystring, returning it
+          return val;
         }
-        // Serial.print("Got value: ");
-        // Serial.print(key);
-        // Serial.print(" : ");
-        // Serial.print("#");
-        // Serial.print(val);
-        // Serial.println("#");
       } else {
         break;
       }
