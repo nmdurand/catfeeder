@@ -11,6 +11,7 @@
 
 #include "scripts/state.h"
 #include "scripts/alarms.h" // Alarm.delay() replaces delay() everywhere
+#include "scripts/url.h"
 #include "scripts/wifiServer.h"
 #include "scripts/clock.h"
 

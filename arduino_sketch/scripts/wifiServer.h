@@ -112,7 +112,7 @@ void handleRequestLine(String currentLine, WiFiClient client) {
     client.println();
   }
   if (currentLine.startsWith("GET /schedule/set")) {
-      // Handle schedule/set request
+    // Handle schedule/set request
     Serial.println("New client requesting schedule setting.");
     client.println("HTTP/1.1 200 OK");
     client.println("Content-type:text/html");
@@ -132,6 +132,10 @@ void parseQueryString(String qs) {
 
   int i;
   String val, key;
+
+  qs = urldecode(qs);
+
+  Serial.println(qs);
   i = qs.indexOf("?");
   if (i != -1) {
     qs = qs.substring(i+1);
@@ -152,13 +156,19 @@ void parseQueryString(String qs) {
           val = qs;
           qs = "";
         }
-        schedule[key] = val;
-        Serial.print("Got value: ");
-        Serial.print(key);
-        Serial.print(" : ");
-        Serial.print("#");
-        Serial.print(val);
-        Serial.println("#");
+
+        if (key == "schedule") {
+          Serial.println("Received new schedule:");
+          Serial.println(val);
+
+          setSchedule(val);
+        }
+        // Serial.print("Got value: ");
+        // Serial.print(key);
+        // Serial.print(" : ");
+        // Serial.print("#");
+        // Serial.print(val);
+        // Serial.println("#");
       } else {
         break;
       }

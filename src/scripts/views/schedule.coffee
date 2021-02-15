@@ -24,15 +24,16 @@ class ScheduleItemView extends Marionette.View
 		'.time':
 			observe: 'time'
 			onSet: (value)->
-				console.log '>> Got time value', value
 				result = value.match TIME_REGEX
-				console.log 'Tst', result
 				if result[0]
 					@model.set
-						h:result[1]
-						m:result[2]
+						h: parseInt result[1], 10
+						m: parseInt result[2], 10
 				value
-		'.quantity': 'q'
+		'.quantity':
+			observe: 'q'
+			onSet: (value)->
+				parseInt value, 10
 
 	initialize: ->
 		# console.log 'Initializing Schedule Item View'

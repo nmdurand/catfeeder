@@ -48,7 +48,7 @@ void initializeSchedule() {
 //   return schedule;
 // }
 
-void setSchedule(char newSchedule[]) {
+void setSchedule(String newSchedule) {
   Serial.println("Setting schedule:");
   Serial.println(newSchedule);
   Serial.println();
