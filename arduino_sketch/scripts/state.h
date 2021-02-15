@@ -47,6 +47,19 @@ void initializeSchedule() {
 // StaticJsonDocument getSchedule() {
 //   return schedule;
 // }
-//
-// void setSchedule() {
-// }
+
+void setSchedule(char newSchedule[]) {
+  Serial.println("Setting schedule:");
+  Serial.println(newSchedule);
+  Serial.println();
+  DeserializationError err = deserializeJson(schedule, newSchedule);
+  if (err) {
+    Serial.print(F("deserializeJson() failed with code "));
+    Serial.println(err.c_str());
+  } else {
+    Serial.print(F("New schedule set!"));
+    serializeJsonPretty(schedule, Serial);
+    Serial.println(err.c_str());
+  }
+
+}

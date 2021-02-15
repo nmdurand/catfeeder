@@ -15,8 +15,8 @@ export default RequestUtils =
 	setSchedule: (schedule)->
 		try
 			response = await axios.get (SERVER_URL + 'schedule/set'),
-				params: schedule
-					# msg: newState
+				params:
+					schedule: schedule
 			console.debug 'Received response:', response.data
 		catch err
 			console.debug err

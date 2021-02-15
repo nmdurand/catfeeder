@@ -6,6 +6,7 @@ import _ from 'lodash'
 import RequestUtils from 'lib/request'
 
 MAX_SLOTS = 6
+TIME_REGEX = /(\d{2}):(\d{2})/
 
 asDoubleDigit = (t)->
 	if t < 10
@@ -19,8 +20,25 @@ class ScheduleItemView extends Marionette.View
 	triggers:
 		'click .delete': 'delete'
 
+	bindings:
+		'.time':
+			observe: 'time'
+			onSet: (value)->
+				console.log '>> Got time value', value
+				result = value.match TIME_REGEX
+				console.log 'Tst', result
+				if result[0]
+					@model.set
+						h:result[1]
+						m:result[2]
+				value
+		'.quantity': 'q'
+
 	initialize: ->
 		# console.log 'Initializing Schedule Item View'
+
+	onRender: ->
+		@stickit()
 
 export default class ScheduleView extends Marionette.CollectionView
 	template: template
@@ -31,9 +49,12 @@ export default class ScheduleView extends Marionette.CollectionView
 
 	ui:
 		'addBtn': '#addBtn'
+		'saveBtn': '#saveBtn'
 
 	events:
 		'click @ui.addBtn': 'addItem'
+		'click @ui.saveBtn': 'setArduinoSchedule'
+
 	childViewEvents:
 		'delete': 'handleDeleteChild'
 
@@ -78,3 +99,12 @@ export default class ScheduleView extends Marionette.CollectionView
 	handleDeleteChild: (cv)->
 		console.log 'Removing child from collection'
 		@collection.remove cv.model
+
+	setArduinoSchedule: ->
+		schedule = _.map @collection.toJSON(), (item)->
+			item = _.pick item, ['s','h','m','q']
+
+		try
+			await RequestUtils.setSchedule JSON.stringify(schedule)
+		catch err
+			console.error 'Error saving schedule in Arduino:', err
