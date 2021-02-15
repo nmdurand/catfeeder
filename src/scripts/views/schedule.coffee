@@ -6,7 +6,6 @@ import _ from 'lodash'
 import RequestUtils from 'lib/request'
 
 MAX_SLOTS = 6
-TIME_REGEX = /(\d{2}):(\d{2})/
 
 asDoubleDigit = (t)->
 	if t < 10
@@ -26,12 +25,8 @@ class ScheduleItemView extends Marionette.View
 			onGet: (values)->
 				asDoubleDigit(values[0]) + ":" + asDoubleDigit(values[1])
 			onSet: (value)->
-				result = value.match TIME_REGEX
-				if result[0]
-					@model.set
-						h: parseInt result[1], 10
-						m: parseInt result[2], 10
-				value
+				values = value.split ':'
+				_.map values, (val)-> parseInt val, 10
 		'.quantity':
 			observe: 'q'
 			onSet: (value)->
