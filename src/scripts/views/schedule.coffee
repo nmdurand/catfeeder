@@ -11,7 +11,7 @@ TIME_REGEX = /(\d{2}):(\d{2})/
 asDoubleDigit = (t)->
 	if t < 10
 		t = "0" + t
-	t
+	"#{t}"
 
 class ScheduleItemView extends Marionette.View
 	template: itemTemplate
@@ -22,7 +22,9 @@ class ScheduleItemView extends Marionette.View
 
 	bindings:
 		'.time':
-			observe: 'time'
+			observe: ['h','m']
+			onGet: (values)->
+				asDoubleDigit(values[0]) + ":" + asDoubleDigit(values[1])
 			onSet: (value)->
 				result = value.match TIME_REGEX
 				if result[0]
@@ -63,7 +65,6 @@ export default class ScheduleView extends Marionette.CollectionView
 		console.log 'Initializing Schedule View'
 
 		@collection = new Backbone.Collection
-		@collection.viewComparator = 'time'
 
 		@collection.on 'add remove', => @updateAddBtnVisibility()
 
@@ -79,9 +80,6 @@ export default class ScheduleView extends Marionette.CollectionView
 			catch err
 				console.error 'Error fetching schedule:', err
 
-		_.each scheduleDetails, (item)->
-			item.time = asDoubleDigit(item.h) + ":" + asDoubleDigit(item.m)
-
 		@collection.set scheduleDetails
 
 	updateAddBtnVisibility: ->
@@ -92,9 +90,8 @@ export default class ScheduleView extends Marionette.CollectionView
 
 	addItem: ->
 		unless @collection.length >=  MAX_SLOTS
-			console.log 'Adding item to schedule'
+			console.log 'Adding new item to schedule'
 			@collection.add new Backbone.Model
-				time: '12:00'
 				s: 1
 				h: 12
 				m: 0
@@ -105,8 +102,7 @@ export default class ScheduleView extends Marionette.CollectionView
 		@collection.remove cv.model
 
 	setArduinoSchedule: ->
-		schedule = _.map @collection.toJSON(), (item)->
-			item = _.pick item, ['s','h','m','q']
+		schedule = @collection.toJSON()
 
 		try
 			await RequestUtils.setSchedule JSON.stringify(schedule)
