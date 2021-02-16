@@ -6,13 +6,13 @@ StaticJsonDocument<256> schedule;
 //////////////////////////////////////////////// Functions declarations
 
 void initializeSchedule();
-// StaticJsonDocument getSchedule();
+StaticJsonDocument<256> getSchedule();
 void setSchedule(String);
 
 ////////////////////////////////////////////////
 
 void initializeSchedule() {
-  // Default schedule on initialize
+  // Set default schedule on initialization
   String newSchedule = "[{\"s\":1,\"h\":7,\"m\":0,\"q\":1},{\"s\":1,\"h\":12,\"m\":0,\"q\":1},{\"s\":1,\"h\":19,\"m\":0,\"q\":1}]";
   setSchedule(newSchedule);
 
@@ -21,9 +21,9 @@ void initializeSchedule() {
   Serial.println();
 }
 
-// StaticJsonDocument getSchedule() {
-//   return schedule;
-// }
+StaticJsonDocument<256> getSchedule() {
+  return schedule;
+}
 
 void setSchedule(String newSchedule) {
   Serial.println("Setting new schedule:");
