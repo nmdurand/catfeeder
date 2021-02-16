@@ -1,4 +1,5 @@
 import Marionette from 'backbone.marionette'
+import Toastr from 'toastr'
 import template from 'templates/schedule'
 import itemTemplate from 'templates/schedule/item'
 import _ from 'lodash'
@@ -92,6 +93,7 @@ export default class ScheduleView extends Marionette.CollectionView
 				scheduleDetails = await RequestUtils.getSchedule()
 			catch err
 				console.error 'Error fetching schedule:', err
+				Toastr.error 'Error fetching schedule.'
 
 		@collection.set scheduleDetails
 
@@ -119,5 +121,7 @@ export default class ScheduleView extends Marionette.CollectionView
 
 		try
 			await RequestUtils.setSchedule JSON.stringify(schedule)
+			Toastr.success "Schedule successfully updated!"
 		catch err
-			console.error 'Error saving schedule in Arduino:', err
+			console.error 'Error updating schedule in Arduino:', err
+			Toastr.error 'Error updating schedule in Arduino'
