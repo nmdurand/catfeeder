@@ -6,7 +6,7 @@ StaticJsonDocument<256> schedule;
 //////////////////////////////////////////////// Functions declarations
 
 void initializeSchedule();
-StaticJsonDocument<256> getSchedule();
+JsonArray getSchedule();
 void setSchedule(String);
 
 ////////////////////////////////////////////////
@@ -21,13 +21,12 @@ void initializeSchedule() {
   Serial.println();
 }
 
-StaticJsonDocument<256> getSchedule() {
-  return schedule;
+JsonArray getSchedule() {
+  return schedule.as<JsonArray>();
 }
 
 void setSchedule(String newSchedule) {
   Serial.println("Setting new schedule...");
-  // Serial.println(newSchedule);
   Serial.println();
   DeserializationError err = deserializeJson(schedule, newSchedule);
   if (err) {
@@ -39,5 +38,5 @@ void setSchedule(String newSchedule) {
     Serial.println(err.c_str());
   }
 
-  setAllAlarms(getSchedule().as<JsonArray>());
+  setAllAlarms(getSchedule());
 }

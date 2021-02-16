@@ -5,27 +5,29 @@ AlarmId allAlarmIds[6];
 
 //////////////////////////////////////////////// Functions declarations
 
-void setAlarm(JsonObject,int);
+AlarmId setAlarm(JsonObject);
 void blinkBuiltinLed();
 void clearAllAlarms();
 void setAllAlarms(JsonArray);
 
 //////////////////////////////////////////////// Alarms
 
-void setAlarm(JsonObject obj, int i) {
+AlarmId setAlarm(JsonObject obj) {
   int h = obj["h"].as<int>();
   int m = obj["m"].as<int>();
   int q = obj["q"].as<int>();
   int s = obj["s"].as<int>();
 
-  if (s==1) {
-    Serial.println(String("Setting new alarm: ")+h+String(",")+m);
+  Serial.println(String("Setting new alarm: ")+h+String(":")+m);
 
-    AlarmId alarm_id = Alarm.alarmRepeat(h,m,0,blinkBuiltinLed);  // Set alarm every day
-    allAlarmIds[i] = alarm_id; //Register alarm id to be able to clear it up
+  AlarmId alarm_id = Alarm.alarmRepeat(h,m,0,blinkBuiltinLed);  // Set alarm every day
+  if (s==1) {
+    Serial.println(String("New alarm set with ID: ")+alarm_id);
   } else {
-    Serial.println("Alarm deactivated");
+    Serial.println(String("New alarm set in deactivated state with Id:")+alarm_id);
+    Alarm.disable(alarm_id);
   }
+  return alarm_id;
 }
 
 void blinkBuiltinLed() {
@@ -38,14 +40,14 @@ void blinkBuiltinLed() {
 }
 
 void clearAllAlarms() {
-  Serial.println("Clearing all alarms");
+  Serial.println("Clearing up all alarms, IDs:");
   int i;
   // Array of 6 ids
   for (i=0;i<6;i++) {
-    Serial.println(String("Clearing alarms id:")+allAlarmIds[i]+Alarm.read(allAlarmIds[i]));
+    Serial.print(allAlarmIds[i]+String(" ; "));
+    Serial.println();
     Alarm.disable(allAlarmIds[i]);
     Alarm.free(allAlarmIds[i]);
-    Serial.println(String("Remaining alarm id:")+allAlarmIds[i]+Alarm.read(allAlarmIds[i]));
     allAlarmIds[i] = NULL;
   }
 }
@@ -57,9 +59,9 @@ void setAllAlarms(JsonArray arr) {
   int i = 0;
   for (JsonVariant value : arr) {
     JsonObject obj = value.as<JsonObject>();
-    Serial.println("Handling schedule item");
+    AlarmId alarm_id = setAlarm(obj);
 
-    setAlarm(obj,i);
+    allAlarmIds[i] = alarm_id; //Register alarm id to be able to clear it up
     i++;
   }
 }

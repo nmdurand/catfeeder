@@ -33,7 +33,7 @@ void connectWiFi() {
 
   // attempt to connect to Wifi network:
   while (status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to Network named: ");
+    Serial.print("Attempting to connect to Network: ");
     Serial.println(ssid); // print the network name (SSID);
 
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
