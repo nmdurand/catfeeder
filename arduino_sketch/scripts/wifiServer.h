@@ -13,8 +13,8 @@ WiFiServer server(80);
 void connectWiFi();
 void printWifiStatus();
 void handleServerClient();
-void handleRequestLine(String currentLine, WiFiClient client);
-String parseQueryStringForKey(String qs, String targetKey);
+void handleRequestLine(String, WiFiClient);
+String parseQueryStringForKey(String, String);
 
 //////////////////////////////////////////////// WiFi setup
 

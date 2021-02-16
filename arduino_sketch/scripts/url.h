@@ -10,13 +10,15 @@
 
   Prerequisite Examples:
   https://github.com/zenmanenergy/ESP8266-Arduino-Examples/tree/master/helloworld_serial
-
-
-
 */
-String urldecode(String str);
-String urlencode(String str);
-unsigned char h2int(char c);
+
+//////////////////////////////////////////////// Functions declarations
+
+String urldecode(String);
+String urlencode(String);
+unsigned char h2int(char);
+
+////////////////////////////////////////////////
 
 
 String urldecode(String str)
