@@ -9,8 +9,8 @@
 
 #include <SPI.h>
 
-#include "scripts/state.h"
 #include "scripts/alarms.h" // Alarm.delay() replaces delay() everywhere
+#include "scripts/state.h"
 #include "scripts/url.h"
 #include "scripts/wifiServer.h"
 #include "scripts/clock.h"
@@ -24,13 +24,12 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT); // set builtin led pin mode
   digitalWrite(LED_BUILTIN, HIGH);
 
-  initializeSchedule();
-
   connectWiFi();
 
   setClockViaNTP();
 
-  setAlarm();
+  initializeSchedule();
+
 }
 
 time_t prevDisplay = 0; // when the digital clock was displayed

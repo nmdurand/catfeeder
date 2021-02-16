@@ -16,7 +16,7 @@ void initializeSchedule() {
   String newSchedule = "[{\"s\":1,\"h\":7,\"m\":0,\"q\":1},{\"s\":1,\"h\":12,\"m\":0,\"q\":1},{\"s\":1,\"h\":19,\"m\":0,\"q\":1}]";
   setSchedule(newSchedule);
 
-  Serial.println("Schedule initialized:");
+  Serial.println("Schedule initialized !");
   // serializeJsonPretty(schedule, Serial);
   Serial.println();
 }
@@ -26,8 +26,8 @@ StaticJsonDocument<256> getSchedule() {
 }
 
 void setSchedule(String newSchedule) {
-  Serial.println("Setting new schedule:");
-  Serial.println(newSchedule);
+  Serial.println("Setting new schedule...");
+  // Serial.println(newSchedule);
   Serial.println();
   DeserializationError err = deserializeJson(schedule, newSchedule);
   if (err) {
@@ -39,4 +39,5 @@ void setSchedule(String newSchedule) {
     Serial.println(err.c_str());
   }
 
+  setAllAlarms(getSchedule().as<JsonArray>());
 }
