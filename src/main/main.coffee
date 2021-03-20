@@ -3,7 +3,6 @@ fs = require('fs').promises
 url = require 'url'
 electron = require 'electron'
 { app, BrowserWindow, ipcMain } = electron
-_ = require 'lodash'
 
 
 console.log 'Running electron.'
