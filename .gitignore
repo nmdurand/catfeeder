@@ -1,4 +1,5 @@
 .DS_Store
 node_modules/
 dist/
+build/
 arduino_sketch/scripts/wifi_secrets.h
