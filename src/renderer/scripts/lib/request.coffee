@@ -1,12 +1,18 @@
 import axios from 'axios'
 import $ from 'jquery'
+mdnsResolver = require 'mdns-resolver'
 
-SERVER_URL = 'http://192.168.1.26/'
+HOST_NAME = 'catfeeder.local'
 
 export default RequestUtils =
+	connectServer: ->
+		console.debug 'Trying to connect to catfeeder server...'
+		@serverIp = await mdnsResolver.resolve HOST_NAME, 'A'
+		console.log 'Found catfeeder server ip:', @serverIp
+
 	getSchedule: ->
 		try
-			response = await axios.get(SERVER_URL + 'schedule/get')
+			response = await axios.get "http://#{@serverIp}/schedule/get"
 			console.debug 'Received response:', response.data
 			response.data
 		catch err
@@ -14,7 +20,7 @@ export default RequestUtils =
 
 	setSchedule: (schedule)->
 		try
-			response = await axios.get (SERVER_URL + 'schedule/set'),
+			response = await axios.get "http://#{@serverIp}/schedule/set",
 				params:
 					schedule: schedule
 			console.debug 'Received response:', response.data

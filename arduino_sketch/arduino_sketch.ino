@@ -35,6 +35,7 @@ void setup() {
 time_t prevDisplay = 0; // when the digital clock was displayed
 
 void loop() {
+  runMDNS();
 
   if (timeStatus() != timeNotSet) {
     if (now() != prevDisplay) { //update the display only if time has changed

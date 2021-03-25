@@ -1,16 +1,26 @@
 #include <WiFiNINA.h>
+#include <WiFiUdp.h>
+#include <ArduinoMDNS.h>
 
 #include "wifi_secrets.h"
+
+#define MDNS_HOST "catfeeder"
+#define MDNS_SERVICE "CATFEEDER SERVER._http"
 
 char ssid[] = SECRET_SSID;    // network SSID
 char pass[] = SECRET_PASS;    // network password (WPA)
 
 int status = WL_IDLE_STATUS;
+
+WiFiUDP udp;
+MDNS mdns(udp);
 WiFiServer server(80);
 
 //////////////////////////////////////////////// Functions declarations
 
 void connectWiFi();
+void initializeMDNS();
+void runMDNS();
 void printWifiStatus();
 void handleServerClient();
 void handleRequestLine(String, WiFiClient);
@@ -44,6 +54,21 @@ void connectWiFi() {
 
   server.begin(); // start the web server on port 80
   printWifiStatus(); // you're connected now, so print out the status
+
+  initializeMDNS();
+}
+
+void initializeMDNS() {
+  // Initialize the mDNS library. You can now reach or ping this
+  // Arduino via the host name "catfeeder.local", provided that your operating
+  // system is mDNS/Bonjour-enabled (such as MacOS X).
+  // Always call this before any other method!
+  mdns.begin(WiFi.localIP(), MDNS_HOST);
+  mdns.addServiceRecord(MDNS_SERVICE, 80, MDNSServiceTCP);
+}
+
+void runMDNS() {
+    mdns.run();
 }
 
 void printWifiStatus() {
