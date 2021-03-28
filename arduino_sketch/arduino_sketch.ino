@@ -22,7 +22,6 @@ void setup() {
   Serial.begin(9600); // initialize serial communication
   while (!Serial); // wait for Arduino Serial Monitor
 
-  initializeMotorPin();
   // pinMode(LED_BUILTIN, OUTPUT); // set builtin led pin mode
   // digitalWrite(LED_BUILTIN, HIGH);
 
@@ -31,6 +30,7 @@ void setup() {
   setClockViaNTP();
 
   initializeSchedule();
+  initializeMotorPin();
 
 }
 

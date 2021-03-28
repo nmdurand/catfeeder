@@ -14,24 +14,27 @@ void listenToSwitchPin();
 //////////////////////////////////////////////// Functions declarations
 
 void initializeMotorPin() {
-	stopMotor();
+  stopMotor();
 }
 
 void startMotor() {
-	digitalWrite(motorPin, HIGH);
+  Serial.println("Starting motor.");
+  digitalWrite(motorPin, HIGH);
 }
 
 void stopMotor() {
-	digitalWrite(motorPin, LOW);
+  Serial.println("Stopping motor.");
+  digitalWrite(motorPin, LOW);
 }
 
 void listenToSwitchPin() {
     // To be called in loop method
-	newSwitchState = digitalRead(switchPin);
-	if ((newSwitchState == HIGH) && (switchState == LOW)) {
-		// Button has been pressed then released
-		// Turn off the motor
-		stopMotor();
-	}
-	switchState = newSwitchState;
+  newSwitchState = digitalRead(switchPin);
+  if ((newSwitchState == HIGH) && (switchState == LOW)) {
+    Serial.println("Switch released, stopping motor.");
+    // Button has been pressed then released
+    // Turn off the motor
+    stopMotor();
+  }
+  switchState = newSwitchState;
 }

@@ -9,7 +9,7 @@ unsigned int localPort = 8888;  // local port to listen for UDP packets
 
 //////////////////////////////////////////////// Functions declarations
 
-void setTimeViaNTP();
+void setClockViaNTP();
 time_t getNtpTime();
 void sendNTPpacket(IPAddress&);
 void digitalClockDisplay();
