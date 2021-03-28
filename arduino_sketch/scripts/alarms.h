@@ -20,7 +20,7 @@ AlarmId setAlarm(JsonObject obj) {
 
   Serial.println(String("Setting new alarm: ")+h+String(":")+m);
 
-  AlarmId alarm_id = Alarm.alarmRepeat(h,m,0,blinkBuiltinLed);  // Set alarm every day
+  AlarmId alarm_id = Alarm.alarmRepeat(h,m,0,startMotor);  // Set alarm every day
   if (s==1) {
     Serial.println(String("New alarm set with ID: ")+alarm_id);
   } else {

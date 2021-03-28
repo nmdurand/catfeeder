@@ -9,6 +9,7 @@
 
 #include <SPI.h>
 
+#include "scripts/motor.h"
 #include "scripts/alarms.h" // Alarm.delay() replaces delay() everywhere
 #include "scripts/state.h"
 #include "scripts/url.h"
@@ -18,11 +19,12 @@
 //////////////////////////////////////////////// Arduino Setup and Loop
 
 void setup() {
-  Serial.begin(9600);      // initialize serial communication
+  Serial.begin(9600); // initialize serial communication
   while (!Serial); // wait for Arduino Serial Monitor
 
-  pinMode(LED_BUILTIN, OUTPUT); // set builtin led pin mode
-  digitalWrite(LED_BUILTIN, HIGH);
+  initializeMotorPin();
+  // pinMode(LED_BUILTIN, OUTPUT); // set builtin led pin mode
+  // digitalWrite(LED_BUILTIN, HIGH);
 
   connectWiFi();
 
@@ -36,6 +38,7 @@ time_t prevDisplay = 0; // when the digital clock was displayed
 
 void loop() {
   runMDNS();
+  listenToSwitchPin();
 
   if (timeStatus() != timeNotSet) {
     if (now() != prevDisplay) { //update the display only if time has changed
